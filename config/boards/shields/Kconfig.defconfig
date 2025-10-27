@@ -1,0 +1,6 @@
+if SHIELD_ZKS
+
+config ZMK_KEYBOARD_NAME
+    default "zks"
+
+endif

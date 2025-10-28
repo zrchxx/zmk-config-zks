@@ -10,15 +10,21 @@
 		compatible = "zmk,matrix-transform";
 		columns = <12>;
 		rows = <8>;
-// | SW1  | SW2  | SW3  | SW4  | SW5  | SW6  |   | SW6  | SW5  | SW4  | SW3  | SW2  | SW1  |
-// | SW7  | SW8  | SW9  | SW10 | SW11 | SW12 |   | SW12 | SW11 | SW10 | SW9  | SW8  | SW7  |
-// | SW13 | SW14 | SW15 | SW16 | SW17 | SW18 |   | SW18 | SW17 | SW16 | SW15 | SW14 | SW13 |
-//                      | SW19 | SW20 | SW21 |   | SW21 | SW20 | SW19 |
+		/*
+		 * This map translates the physical matrix wiring (defined in kscan0)
+		 * to the logical keymap layout.
+		 *
+		 * Keymap Layout:
+		 * | Q | W | E | R | T | TAB |   | RET | Y | U | I | O | P |
+		 * | A | S | D | F | G |     |   |     | H | J | K | L | ; |
+		 * | Z | X | C | V | B | LWR |   | RAS | N | M | , | . | / |
+		 *               |CTRL | GUI | SPC |   | BSPC| LS|ALT|
+		 */
 		map = <
-RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4) RC(0,5)  RC(4,6) RC(4,7) RC(4,8) RC(4,9) RC(4,10) RC(4,11)
-RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4)                  RC(5,7) RC(5,8) RC(5,9) RC(5,10) RC(5,11)
-RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(6,6) RC(6,7) RC(6,8) RC(6,9) RC(6,10) RC(6,11)
-                        RC(3,3) RC(3,4) RC(3,5)  RC(7,6) RC(7,7) RC(7,8)
+/*L_HAND*/ RC(4,11) RC(4,10) RC(4,9) RC(4,8) RC(4,7) RC(4,6)  /*R_HAND*/ RC(0,5) RC(0,4) RC(0,3) RC(0,2) RC(0,1) RC(0,0)
+/*L_HAND*/ RC(5,11) RC(5,10) RC(5,9) RC(5,8) RC(5,7)                  /*R_HAND*/ RC(1,4) RC(1,3) RC(1,2) RC(1,1) RC(1,0)
+/*L_HAND*/ RC(6,11) RC(6,10) RC(6,9) RC(6,8) RC(6,7) RC(6,6)  /*R_HAND*/ RC(2,5) RC(2,4) RC(2,3) RC(2,2) RC(2,1) RC(2,0)
+/*L_THUMB*/                     RC(7,8) RC(7,7) RC(7,6)  /*R_THUMB*/ RC(3,5) RC(3,4) RC(3,3)
 		>;
 	};
 
@@ -27,30 +33,32 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(6,6) RC(6,7) RC(6,8) RC(6,9)
 		label = "KSCAN";
 		diode-direction = "col2row";
 		row-gpios
-			= <&gpio0 31 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 0 RIGHT
-			, <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 1 RIGHT
-			, <&gpio0 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 2 RIGHT
-			, <&gpio1 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 3 RIGHT
-			///--------------------------------------------------------------\\\
-            , <&gpio0 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 4 LEFT
-			, <&gpio0 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 5 LEFT
-			, <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 6 LEFT
-			, <&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // ROW 7 LEFT
+			// Right Hand Rows
+			= <&gpio0 31 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 0 (Diagram #5 ROW)
+			, <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 1 (Diagram #6 ROW)
+			, <&gpio0 2  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 2 (Diagram #7 ROW)
+			, <&gpio1 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 3 (Diagram #8 ROW)
+			// Left Hand Rows
+			, <&gpio0 6  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 4 (Diagram #1 ROW)
+			, <&gpio0 8  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 5 (Diagram #2 ROW)
+			, <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 6 (Diagram #3 ROW)
+			, <&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Matrix Row 7 (Diagram #4 ROW)
 			;
-        col-gpios
-            = <&gpio1 13 GPIO_ACTIVE_HIGH> // COL 0 RIGHT
-            , <&gpio1 11 GPIO_ACTIVE_HIGH> // COL 1 RIGHT
-            , <&gpio0 10 GPIO_ACTIVE_HIGH> // COL 2 RIGHT
-            , <&gpio0 9 GPIO_ACTIVE_HIGH> // COL 3 RIGHT
-            , <&gpio1 7 GPIO_ACTIVE_HIGH> // COL 4 RIGHT
-            , <&gpio1 2 GPIO_ACTIVE_HIGH> // COL 5 RIGHT
-			///--------------------------------------\\\
-            , <&gpio1 6 GPIO_ACTIVE_HIGH> // COL 11 LEFT
-            , <&gpio1 4 GPIO_ACTIVE_HIGH> // COL 10 LEFT
-            , <&gpio0 11 GPIO_ACTIVE_HIGH> // COL 9 LEFT
-            , <&gpio1 00 GPIO_ACTIVE_HIGH> // COL 8 LEFT
-            , <&gpio0 24 GPIO_ACTIVE_HIGH> // COL 7 LEFT
-            , <&gpio0 22 GPIO_ACTIVE_HIGH> // COL 6 LEFT
-            ;
+		col-gpios
+			// Right Hand Columns (in reverse order)
+			= <&gpio1 13 GPIO_ACTIVE_HIGH> // Matrix Col 0 (Diagram #12 COL)
+			, <&gpio1 11 GPIO_ACTIVE_HIGH> // Matrix Col 1 (Diagram #11 COL)
+			, <&gpio0 10 GPIO_ACTIVE_HIGH> // Matrix Col 2 (Diagram #10 COL)
+			, <&gpio0 9  GPIO_ACTIVE_HIGH> // Matrix Col 3 (Diagram #9 COL)
+			, <&gpio1 7  GPIO_ACTIVE_HIGH> // Matrix Col 4 (Diagram #8 COL)
+			, <&gpio1 2  GPIO_ACTIVE_HIGH> // Matrix Col 5 (Diagram #7 COL)
+			// Left Hand Columns (in reverse order)
+			, <&gpio1 6  GPIO_ACTIVE_HIGH> // Matrix Col 6 (Diagram #6 COL)
+			, <&gpio1 4  GPIO_ACTIVE_HIGH> // Matrix Col 7 (Diagram #5 COL)
+			, <&gpio0 11 GPIO_ACTIVE_HIGH> // Matrix Col 8 (Diagram #4 COL)
+			, <&gpio1 00 GPIO_ACTIVE_HIGH> // Matrix Col 9 (Diagram #3 COL)
+			, <&gpio0 24 GPIO_ACTIVE_HIGH> // Matrix Col 10 (Diagram #2 COL)
+			, <&gpio0 22 GPIO_ACTIVE_HIGH> // Matrix Col 11 (Diagram #1 COL)
+			;
 	};
 };
